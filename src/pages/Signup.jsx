@@ -7,6 +7,7 @@ import {
   FaEnvelope,
   FaLock,
   FaKey,
+  FaCamera,
 } from "react-icons/fa";
 
 export default function Signup() {
@@ -15,12 +16,33 @@ export default function Signup() {
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+
   const navigate = useNavigate();
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+      setPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const sendOtp = async () => {
+    
+    if (!form.name || !form.email || !form.password) {
+      setMessage("Please fill all the fields before sending OTP.");
+      return;
+    }
+
     setLoading(true);
+    setMessage(""); 
     try {
-      const res = await axios.post("http://localhost:8080/auth/register", form);
+      await axios.post("http://localhost:8080/auth/register", form);
       setMessage("OTP sent to your email.");
       setOtpSent(true);
     } catch (err) {
@@ -31,32 +53,67 @@ export default function Signup() {
   };
 
   const verifyOtp = async () => {
+    setLoading(true);
     try {
       const res = await axios.post("http://localhost:8080/auth/verify", {
         email: form.email,
         otp,
       });
+
       if (res.data === "OTP verified successfully") {
         setMessage("✅ Verified");
+
+        if (selectedImage) {
+          await axios.put(
+            `http://localhost:8080/auth/profile/upload/${form.email}`,
+            { image: selectedImage }
+          );
+        }
+
         navigate("/login");
       } else {
         setMessage("❌ Invalid OTP");
       }
     } catch (err) {
       setMessage(err.response?.data || "OTP verification failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e5f4ed] via-white to-[#daf4e9] flex flex-col justify-center items-center relative text-sm px-4 py-6">
-      
       <div className="text-teal-600 text-3xl font-bold flex items-center gap-2 mb-6">
         <FaWhatsapp className="text-[#25D366]" />
         WhatsApp
       </div>
 
-      
       <div className="w-full max-w-sm space-y-4">
+        {!otpSent && (
+          <>
+            <div className="text-center">
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="preview"
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-teal-400 mb-2"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-2">
+                  <FaCamera size={24} />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleImageChange}
+                className="text-center text-sm"
+              />
+            </div>
+          </>
+        )}
+
         {!otpSent ? (
           <>
             <div className="relative">
@@ -64,6 +121,7 @@ export default function Signup() {
               <input
                 type="text"
                 placeholder="Name"
+                required
                 className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-full bg-white focus:outline-[#25D366]"
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
@@ -74,6 +132,7 @@ export default function Signup() {
               <input
                 type="email"
                 placeholder="Email"
+                required
                 className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-full bg-white focus:outline-[#25D366]"
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -83,6 +142,7 @@ export default function Signup() {
               <FaLock className="absolute top-3 left-3 text-gray-400" />
               <input
                 type="password"
+                required
                 placeholder="Password"
                 className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-full bg-white focus:outline-[#25D366]"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -91,8 +151,12 @@ export default function Signup() {
 
             <button
               onClick={sendOtp}
-              disabled={loading}
-              className="w-full py-3 bg-[#25D366] text-white rounded-full font-semibold hover:bg-[#1db954] transition"
+              disabled={loading || !form.name || !form.email || !form.password}
+              className={`w-full py-3 rounded-full font-semibold transition ${
+                loading || !form.name || !form.email || !form.password
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#25D366] text-white hover:bg-[#1db954]"
+              }`}
             >
               {loading ? "Sending OTP..." : "Send OTP"}
             </button>
@@ -126,12 +190,10 @@ export default function Signup() {
           </>
         )}
 
-    
         {message && (
           <div className="text-center text-red-600 font-medium">{message}</div>
         )}
 
-        
         <p className="text-center text-gray-600">
           Already registered?{" "}
           <a
@@ -143,7 +205,6 @@ export default function Signup() {
         </p>
       </div>
 
-      
       {loading && (
         <div className="absolute inset-0 flex justify-center items-center bg-white/60 backdrop-blur-sm z-20">
           <div className="w-10 h-10 border-4 border-[#25D366] border-t-transparent rounded-full animate-spin"></div>
