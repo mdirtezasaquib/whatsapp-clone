@@ -42,7 +42,7 @@ export default function Signup() {
     setLoading(true);
     setMessage(""); 
     try {
-      await axios.post("http://localhost:8080/auth/register", form);
+      await axios.post("https://whatsappclonebackend-f9g8.onrender.com/auth/register", form);
       setMessage("OTP sent to your email.");
       setOtpSent(true);
     } catch (err) {
@@ -55,7 +55,7 @@ export default function Signup() {
   const verifyOtp = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8080/auth/verify", {
+      const res = await axios.post("https://whatsappclonebackend-f9g8.onrender.com/auth/verify", {
         email: form.email,
         otp,
       });
@@ -65,7 +65,7 @@ export default function Signup() {
 
         if (selectedImage) {
           await axios.put(
-            `http://localhost:8080/auth/profile/upload/${form.email}`,
+            `https://whatsappclonebackend-f9g8.onrender.com/auth/profile/upload/${form.email}`,
             { image: selectedImage }
           );
         }

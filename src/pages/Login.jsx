@@ -17,7 +17,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8080/auth/login", form);
+      const res = await axios.post("https://whatsappclonebackend-f9g8.onrender.com/auth/login", form);
 
       if (res.data === "Login successful") {
         

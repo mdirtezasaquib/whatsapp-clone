@@ -20,7 +20,7 @@ export default function ProfilePage() {
 
   const fetchUserProfile = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/auth/auth/${userEmail}`);
+      const res = await axios.get(`https://whatsappclonebackend-f9g8.onrender.com/auth/auth/${userEmail}`);
       setUser(res.data);
       setNewDesc(res.data.description || "");
     } catch (err) {
@@ -30,7 +30,7 @@ export default function ProfilePage() {
 
   const updateDescription = async () => {
     try {
-      await axios.put(`http://localhost:8080/auth/update-description`, {
+      await axios.put(`https://whatsappclonebackend-f9g8.onrender.com/auth/update-description`, {
         email: user.email,
         description: newDesc,
       });
@@ -49,7 +49,7 @@ export default function ProfilePage() {
     reader.onloadend = async () => {
       try {
         await axios.put(
-          `http://localhost:8080/auth/profile/upload/${user.email}`,
+          `https://whatsappclonebackend-f9g8.onrender.com/auth/profile/upload/${user.email}`,
           { image: reader.result }
         );
         fetchUserProfile();
@@ -64,7 +64,7 @@ export default function ProfilePage() {
     if (!window.confirm("Are you sure you want to delete your account?")) return;
 
     try {
-      await axios.delete(`http://localhost:8080/auth/delete/${user.email}`);
+      await axios.delete(`https://whatsappclonebackend-f9g8.onrender.com/auth/delete/${user.email}`);
       localStorage.clear();
       window.location.href = "/signup";
     } catch (err) {

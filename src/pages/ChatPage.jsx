@@ -16,7 +16,7 @@ export default function ChatPage() {
     if (!currentUser || !currentUser.email) return;
 
     axios
-      .get("http://localhost:8080/auth/getAll/users")
+      .get("https://whatsappclonebackend-f9g8.onrender.com/auth/getAll/users")
       .then((res) => {
         const others = res.data.filter((u) => u.email !== currentUser.email);
         setContacts(others);
@@ -35,7 +35,7 @@ export default function ChatPage() {
   const loadChat = (user) => {
     setSelectedUser(user);
     axios
-      .get("http://localhost:8080/api/chat/messages", {
+      .get("https://whatsappclonebackend-f9g8.onrender.com/api/chat/messages", {
         params: {
           sender: currentUser.email,
           receiver: user.email,
@@ -49,7 +49,7 @@ export default function ChatPage() {
     if (!newMsg.trim()) return;
 
     axios
-      .post("http://localhost:8080/api/chat/send", {
+      .post("https://whatsappclonebackend-f9g8.onrender.com/api/chat/send", {
         senderEmail: currentUser.email,
         receiverEmail: selectedUser.email,
         message: newMsg,
