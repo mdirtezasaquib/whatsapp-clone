@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,6 +20,7 @@ export default function Signup() {
   const [preview, setPreview] = useState(null);
 
   const navigate = useNavigate();
+  const fileInputRef = useRef(null); 
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -32,15 +33,18 @@ export default function Signup() {
     reader.readAsDataURL(file);
   };
 
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
+
   const sendOtp = async () => {
-    
     if (!form.name || !form.email || !form.password) {
       setMessage("Please fill all the fields before sending OTP.");
       return;
     }
 
     setLoading(true);
-    setMessage(""); 
+    setMessage("");
     try {
       await axios.post("https://whatsappclonebackend-f9g8.onrender.com/auth/register", form);
       setMessage("OTP sent to your email.");
@@ -91,6 +95,7 @@ export default function Signup() {
       <div className="w-full max-w-sm space-y-4">
         {!otpSent && (
           <>
+            
             <div className="text-center">
               {preview ? (
                 <img
@@ -99,21 +104,36 @@ export default function Signup() {
                   className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-teal-400 mb-2"
                 />
               ) : (
-                <div className="w-24 h-24 rounded-full mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-2">
+                <div
+                  className="w-24 h-24 rounded-full mx-auto bg-gray-200 flex items-center justify-center text-gray-500 mb-2 cursor-pointer"
+                  onClick={handleIconClick}
+                >
                   <FaCamera size={24} />
                 </div>
               )}
+
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={handleIconClick}
+                  className="flex items-center gap-1 text-sm text-teal-600 hover:underline"
+                >
+                  <FaCamera /> Choose Image
+                </button>
+              </div>
+
               <input
                 type="file"
                 accept="image/*"
-                capture="environment"
+                ref={fileInputRef}
                 onChange={handleImageChange}
-                className="text-center text-sm"
+                className="hidden"
               />
             </div>
           </>
         )}
 
+      
         {!otpSent ? (
           <>
             <div className="relative">
@@ -205,6 +225,7 @@ export default function Signup() {
         </p>
       </div>
 
+      
       {loading && (
         <div className="absolute inset-0 flex justify-center items-center bg-white/60 backdrop-blur-sm z-20">
           <div className="w-10 h-10 border-4 border-[#25D366] border-t-transparent rounded-full animate-spin"></div>
