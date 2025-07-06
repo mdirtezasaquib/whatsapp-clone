@@ -1,11 +1,21 @@
 import { FaGoogle, FaWhatsapp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function WelcomeScreen() {
   const navigate = useNavigate();
 
+  
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (email) {
+      navigate("/chat");
+    }
+  }, [navigate]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e5f4ed] via-white to-[#daf4e9] text-teal-600 flex flex-col justify-between items-center px-6 py-2 relative">
+      
       
       <div className="flex justify-center mt-4">
         <div className="bg-white rounded-full p-4">
@@ -13,7 +23,7 @@ export default function WelcomeScreen() {
         </div>
       </div>
 
-      
+    
       <div className="text-center">
         <h1 className="text-3xl font-bold leading-snug">
           Talk freely. Connect instantly.
@@ -23,7 +33,7 @@ export default function WelcomeScreen() {
         </p>
       </div>
 
-      
+    
       <div className="w-full space-y-4">
         <button
           className="flex items-center justify-center gap-2 w-full bg-white text-black py-3 rounded-full font-medium text-sm shadow-sm"
@@ -47,15 +57,15 @@ export default function WelcomeScreen() {
         </button>
       </div>
 
-    
+      
       <div className="text-center text-xs text-gray-400 px-4 leading-snug">
         Tap to chat. By doing so, you agree to our{" "}
         <span className="underline">Terms</span>,{" "}
-        <span className="underline">Privacy Policy</span>,  and a bite of our {" "}
+        <span className="underline">Privacy Policy</span>, and a bite of our{" "}
         <span className="underline">Cookies 🍪</span>
       </div>
 
-
+      
       <div className="w-full">
         <p className="text-center text-sm mb-2 text-gray-400">
           Already have an account?

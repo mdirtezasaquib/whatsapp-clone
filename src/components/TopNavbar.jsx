@@ -15,8 +15,13 @@ export default function TopNavbar() {
   const dropdownRef = useRef();
 
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/login");
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("email");
+      localStorage.removeItem("userId");
+      navigate("/"); 
+    }
   };
 
   const navItems = [
@@ -51,7 +56,8 @@ export default function TopNavbar() {
     <nav className="w-full bg-white fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 relative">
-          
+
+
           <div className="flex items-center gap-2">
             <FaWhatsapp className="text-[#25D366] text-2xl" />
             <span className="text-xl font-bold text-[#075E54]">WhatsApp</span>
@@ -59,7 +65,6 @@ export default function TopNavbar() {
 
           
           <div className="flex items-center gap-4">
-        
             <div className="hidden md:flex items-center gap-6">
               {navItems.map((item) => (
                 <NavLink
@@ -85,7 +90,7 @@ export default function TopNavbar() {
               </button>
             </div>
 
-            
+        
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
@@ -95,7 +100,7 @@ export default function TopNavbar() {
               </button>
 
               {showMenu && (
-                <div className="absolute right-0 mt-2 bg-teal-50 rounded-md w-48 z-50">
+                <div className="absolute right-0 mt-2 bg-teal-50 rounded-md w-48 z-50 shadow">
                   {dropdownOptions.map((item, idx) => (
                     <button
                       key={idx}

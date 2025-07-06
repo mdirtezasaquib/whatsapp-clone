@@ -27,7 +27,7 @@ export default function BottomNavbar() {
       localStorage.removeItem("currentUser");
       localStorage.removeItem("email");
       localStorage.removeItem("userId");
-      navigate("/login");
+      navigate("/");
     }
   };
 
