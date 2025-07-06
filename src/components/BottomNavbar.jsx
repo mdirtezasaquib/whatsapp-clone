@@ -1,4 +1,3 @@
-
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   FaComments,
@@ -23,8 +22,13 @@ export default function BottomNavbar() {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/login");
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("email");
+      localStorage.removeItem("userId");
+      navigate("/login");
+    }
   };
 
   return (
