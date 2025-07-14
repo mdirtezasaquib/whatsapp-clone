@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ContactList from "../components/ContactList";
 import ChatBox from "../components/ChatBox";
-import BottomNavbar from "../components/BottomNavbar"; 
+import BottomNavbar from "../components/BottomNavbar";
 
 export default function ChatPage() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -11,6 +11,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [newMsg, setNewMsg] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     if (!currentUser || !currentUser.email) return;
@@ -20,8 +21,12 @@ export default function ChatPage() {
       .then((res) => {
         const others = res.data.filter((u) => u.email !== currentUser.email);
         setContacts(others);
+        setLoading(false); 
       })
-      .catch((err) => console.error("Error fetching users:", err));
+      .catch((err) => {
+        console.error("Error fetching users:", err);
+        setLoading(false); 
+      });
   }, [currentUser]);
 
   useEffect(() => {
@@ -69,6 +74,14 @@ export default function ChatPage() {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="w-12 h-12 border-4 border-green-400 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col md:flex-row h-screen mt-12">
       {(isMobile && !selectedUser) || !isMobile ? (
@@ -91,7 +104,6 @@ export default function ChatPage() {
         />
       ) : null}
 
-      
       {isMobile && !selectedUser && <BottomNavbar />}
     </div>
   );

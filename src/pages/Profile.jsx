@@ -110,16 +110,16 @@ export default function ProfilePage() {
     }
   };
 
+
   if (!user)
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500 text-lg">
-        Loading Profile...
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-teal-500 border-dashed rounded-full animate-spin"></div>
       </div>
     );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e5f4ed] via-white to-[#daf4e9] text-gray-800 px-5 pt-28 pb-16 flex flex-col items-center gap-8">
-    
       <div className="relative w-36 h-36 mb-2">
         <img
           src={user.profileImage || "/default-avatar.png"}
@@ -132,7 +132,6 @@ export default function ProfilePage() {
         </label>
       </div>
 
-    
       <div className="flex flex-col items-center gap-1">
         <div className="flex items-center gap-2 text-2xl font-bold text-teal-700">
           <FaUser /> {user.name}
@@ -142,7 +141,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-  
       <div className="w-full max-w-lg">
         <p className="text-lg font-semibold mb-2 flex items-center gap-2 text-teal-800">
           <FaUser /> About Me
@@ -185,7 +183,6 @@ export default function ProfilePage() {
         )}
       </div>
 
-  
       <div className="w-full max-w-lg">
         <p className="text-lg font-semibold mb-2 flex items-center gap-2 text-teal-800">
           <FaLinkedin /> Social Links
@@ -284,7 +281,6 @@ export default function ProfilePage() {
         )}
       </div>
 
-  
       <button
         onClick={handleDelete}
         className="mt-6 bg-red-500 text-white px-6 py-2 rounded-full flex items-center gap-2 hover:bg-red-600 transition"
